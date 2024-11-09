@@ -1,37 +1,30 @@
-import React, { useState } from "react";
-import { data } from "../store/data.js";
-import TableItem from "./TableItem.js";
-import { store } from "..store/reduxStore";
-import { Provider } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
+import TableItem from "./TableItem";
 
 function Table() {
-  const [tableData, setTableData] = useState(data.rows);
-  const refData = tableData.map((a) => {
-    return { ...a, intVal: a.value };
-  });
-  //debugger;
+  const data = useSelector((state) => state.dataTable);
+  // const dispatch = useDispatch();
 
   return (
-    <Provider store={store}>
-      <div>
-        <table>
+    <div>
+      <table>
+        <thead>
           <tr>
-            <th>Label</th>
+            <th>Name</th>
             <th>Value</th>
             <th>Input</th>
-            <th>Allocation %</th>
-            <th>Allocation Val</th>
-            <th>Variance %</th>
+            <th>% Accum</th>
+            <th>Value Accum</th>
+            <th>Variance</th>
           </tr>
-          <tbody>
-            {refData.length > 0 &&
-              refData.map((item, index) => {
-                return <TableItem item={item} index={index} />;
-              })}
-          </tbody>
-        </table>
-      </div>
-    </Provider>
+        </thead>
+        <tbody>
+          {data &&
+            data.map((a, i) => <TableItem key={i} child={a} index={i} />)}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

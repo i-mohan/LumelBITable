@@ -3,7 +3,7 @@ export const data = {
     {
       id: "electronics",
       label: "Electronics",
-      value: 1400,
+      value: 1500,
       children: [
         {
           id: "phones",
@@ -36,3 +36,5 @@ export const data = {
     },
   ],
 };
+
+// The values for "electronics" and "furniture" should be calculated based on their children values.

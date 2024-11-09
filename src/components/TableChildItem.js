@@ -1,52 +1,75 @@
 import React, { useState } from "react";
-import { data } from "../store/data.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  incrementByPercent,
+  incrementByAmount,
+} from "../reducStore/reduxSlice";
 
-function TableChildItem({ child, parent, index }) {
-  const [variance, setVariance] = useState("0");
-  const [val, setVal] = useState(0);
-  const [tableItem, setTableItem] = useState(child);
-  const [refTableData, setRefTableData] = useState(data.rows);
+function TableChildItem({ parentIndex, index }) {
+  const childData = useSelector((state) => {
+    const [parentIdx, childIdx] = index.split("_").map(Number);
+    return state.dataTable[parentIdx].children[childIdx];
+  });
 
-  const handlePercent = (index) => {
-    //debugger;
-    setTableItem({
-      ...tableItem,
-      value: tableItem.value + (tableItem.value * parseInt(val)) / 100,
-    });
-  };
+  // const inputRef = useRef(null);
+  const dispatch = useDispatch();
+  const [val, setVal] = useState(null);
 
-  const handleAllocation = (index) => {
-    //debugger;
-    setTableItem({ ...tableItem, value: val });
+  const handelBtnClick = (e) => {
+    const userVal = parseFloat(val);
+    const btnClick = e.target.name;
+
+    if (btnClick === "1") {
+      dispatch(
+        incrementByPercent({
+          val: userVal,
+          clickon: "c",
+          parentIndex,
+          index,
+        })
+      );
+    } else {
+      dispatch(
+        incrementByAmount({
+          val: userVal,
+          clickon: "c",
+          parentIndex,
+          index,
+        })
+      );
+    }
   };
 
   return (
-    <tr key={tableItem.label}>
-      <td>--{tableItem.label}</td>
-      <td>{tableItem.value}</td>
+    <tr>
+      <td>--{childData.label}</td>
+      <td>{childData.value}</td>
       <td>
         <input
-          type="number"
           onChange={(e) => setVal(e.target.value)}
-          value={val}
-        />
-      </td>
-      <td>
-        <input
-          // ref={item.label}
-          type="button"
-          value="Increase BY %"
-          onClick={(e) => handlePercent(index)}
+          type="textnumber"
+          placeholder="Enter value"
         />
       </td>
       <td>
         <input
           type="button"
-          value="Replace Value"
-          onClick={(e) => handleAllocation(index)}
+          value="% Accum"
+          name="1"
+          onClick={handelBtnClick}
+          disabled={val > 0 ? false : true}
         />
       </td>
-      <td>{variance} %</td>
+      <td>
+        <input
+          type="button"
+          value="Val Accum"
+          name="2"
+          onClick={handelBtnClick}
+          disabled={val > 0 ? false : true}
+        />
+      </td>
+      <td>{childData.Variance} %</td>
     </tr>
   );
 }

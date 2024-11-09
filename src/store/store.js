@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "./reduxStore";
+import dataTableReducer from "../reducStore/reduxSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    dataTable: dataTableReducer,
   },
 });
